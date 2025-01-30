@@ -1,0 +1,28 @@
+ name: Configure Angie cluster nodes
+  hosts: angie
+  become: true
+  tasks:
+    - name: Copy angie.conf to /etc/angie/
+      copy:
+        src: ./Angie_config_files/angie.conf
+        dest: /etc/angie/angie.conf
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+    - name: Copy contents of http.d to /etc/angie/http.d
+      copy:
+        src: ./Angie_config_files/http.d/
+        dest: /etc/angie/http.d/
+        owner: root
+        group: root
+        mode: '0644'
+        directory_mode: '0755'
+    - name: Check the status of angie.service
+      service_facts:
+
+    - name: Reload angie.service if running
+      service:
+        name: angie
+        state: reloaded
+      when: ansible_facts.services['angie.service'].state == "running"
