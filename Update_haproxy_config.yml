@@ -1,0 +1,30 @@
+---
+- name: Update configuration files on haproxy cluster
+  hosts: haproxy
+  become: true
+  tasks:
+    - name: Ensure the target directory exists
+      file:
+        path: /etc/haproxy
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Copy the configuration file
+      copy:
+        src: ./HAProxy_config_files/haproxy.cfg
+        dest: /etc/haproxy/haproxy.cfg
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+
+    - name: Check the status of haproxy resource in pcs
+      command: pcs resource show haproxy
+      register: haproxy_status
+      failed_when: haproxy_status.rc != 0
+
+    - name: Restart haproxy resource using pcs
+      command: pcs resource restart haproxy
+      when: "'Started' in haproxy_status.stdout"

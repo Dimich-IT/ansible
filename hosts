@@ -1,0 +1,14 @@
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+[angie]
+192.168.1.81 ansible_user=ansible
+192.168.1.82 ansible_user=ansible
+
+[haproxy]
+192.168.1.70 ansible_user=ansible
+192.168.1.71 ansible_user=ansible
+
+[webservers]
+192.168.1.73 ansible_user=ansible
+192.168.1.74 ansible_user=ansible
